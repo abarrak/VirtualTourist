@@ -65,7 +65,7 @@
         <!--Photos Album-->
         <scene sceneID="qXH-BA-Nkb">
             <objects>
-                <viewController title="Photos Album" id="Oej-dl-ljF" customClass="PhotoAlbumsVC" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Photos Album" id="Oej-dl-ljF" customClass="PhotoAlbumVC" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FnV-D9-bAf"/>
                         <viewControllerLayoutGuide type="bottom" id="Y4e-CM-U7N"/>
@@ -75,7 +75,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="nfB-PF-LvI">
-                                <rect key="frame" x="0.0" y="64" width="375" height="106"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="128"/>
                                 <connections>
                                     <outlet property="delegate" destination="Oej-dl-ljF" id="3gk-Nv-hWy"/>
                                 </connections>
@@ -89,7 +89,7 @@
                                 </items>
                             </toolbar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="W0X-up-QTj">
-                                <rect key="frame" x="0.0" y="178" width="375" height="445"/>
+                                <rect key="frame" x="0.0" y="200" width="375" height="423"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Atj-1f-zY7">
                                     <size key="itemSize" width="140" height="110"/>
@@ -135,7 +135,7 @@
                             <constraint firstItem="72o-Gc-Dyk" firstAttribute="bottom" secondItem="Y4e-CM-U7N" secondAttribute="top" id="Nti-Oy-8rD"/>
                             <constraint firstItem="72o-Gc-Dyk" firstAttribute="trailing" secondItem="nfB-PF-LvI" secondAttribute="trailing" id="YDa-pe-i5L"/>
                             <constraint firstItem="72o-Gc-Dyk" firstAttribute="leading" secondItem="W0X-up-QTj" secondAttribute="leading" id="ajE-Ia-5OM"/>
-                            <constraint firstItem="Y4e-CM-U7N" firstAttribute="top" secondItem="nfB-PF-LvI" secondAttribute="bottom" constant="497" id="l3Z-MU-O43"/>
+                            <constraint firstItem="Y4e-CM-U7N" firstAttribute="top" secondItem="nfB-PF-LvI" secondAttribute="bottom" constant="475" id="l3Z-MU-O43"/>
                             <constraint firstItem="W0X-up-QTj" firstAttribute="leading" secondItem="RjE-2L-bsK" secondAttribute="leading" id="nrn-eL-gdY"/>
                             <constraint firstItem="72o-Gc-Dyk" firstAttribute="top" secondItem="W0X-up-QTj" secondAttribute="bottom" id="ydA-l4-abf"/>
                             <constraint firstItem="nfB-PF-LvI" firstAttribute="top" secondItem="FnV-D9-bAf" secondAttribute="bottom" id="yvr-pO-yrv"/>

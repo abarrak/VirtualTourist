@@ -56,17 +56,15 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView,
                  calloutAccessoryControlTapped control: UIControl) {
-        guard let annotation = view.annotation else {
-            return
+        if let annotation = view.annotation {
+            pinToOpen = pinFromAnnotation(annotation)
+            performSegue(withIdentifier: "presentAlbumsVC", sender: self)
         }
-        
-        pinToOpen = pinFromAnnotation(annotation)
-        performSegue(withIdentifier: "presentAlbumsVC", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "presentAlbumsVC" {
-            let albumVC = segue.destination as! PhotoAlbumsVC
+            let albumVC = segue.destination as! PhotoAlbumVC
             albumVC.pin = pinToOpen
         }
     }

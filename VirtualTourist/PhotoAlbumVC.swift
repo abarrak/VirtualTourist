@@ -1,5 +1,5 @@
 //
-//  PhotoAlbumsVC.swift
+//  PhotoAlbumVC.swift
 //  VirtualTourist
 //
 //  Created by Abdullah on 2/15/17.
@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class PhotoAlbumsVC: UIViewController, MKMapViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
+class PhotoAlbumVC: UIViewController, MKMapViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
     // Mark: - Properties
     
     @IBOutlet weak var topMapView: MKMapView!
