@@ -20,9 +20,10 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var allPins: [Pin]?
     var currentLocation: Pin?
     
+    var pinToOpen: Pin?
     
     // Mark: - Life Cycle
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.isNavigationBarHidden = true
@@ -53,27 +54,42 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
         return pinView
     }
     
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView,
+                 calloutAccessoryControlTapped control: UIControl) {
+        guard let annotation = view.annotation else {
+            return
+        }
+        
+        pinToOpen = pinFromAnnotation(annotation)
+        performSegue(withIdentifier: "presentAlbumsVC", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "presentAlbumsVC" {
+            let albumVC = segue.destination as! PhotoAlbumsVC
+            albumVC.pin = pinToOpen
+        }
+    }
     
     
     // Mark: - Methods
-    
     
     private func retrieveHistory() {
         retrieveStoredPins()
         retrievePreviousLocation()
     }
-
+    
     private func retrieveStoredPins() {
         
     }
-
+    
     private func retrievePreviousLocation() {
         if currentLocation != nil {
             navigateTo(currentLocation)
         }
     }
     
-    // Listen for long presses on the map view and invoke long gesture callback in repsonse.
+    // Listen for long presses on the map view, and invoke long gesture callback in response.
     private func registerGestures() {
         let longPressGesture = UILongPressGestureRecognizer(target: self,
                                                             action: #selector(handleLongPress(_:)))
@@ -123,7 +139,6 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 self.mapView.addAnnotation(annotation)
             })
         }
-        
     }
     
     private func navigateTo(_ location: Pin?) {
@@ -148,7 +163,6 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
                     pinAnnotations.append(annotation)
                 }
             }
-            
             mapView.addAnnotations(pinAnnotations)
         }
     }
@@ -164,11 +178,11 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
         annotation.title = ""
-
+        
         return annotation
     }
     
-
+    
     private func cleanMap() {
         if pinAnnotations.count > 0 {
             mapView.removeAnnotations(pinAnnotations)
@@ -177,6 +191,11 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // Mark: - Helpers
     
+    private func pinFromAnnotation(_ annotation: MKAnnotation) -> Pin? {
+        return nil
+    }
+    
     private func persistPin() {
+        
     }
 }

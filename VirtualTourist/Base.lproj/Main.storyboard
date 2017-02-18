@@ -55,7 +55,7 @@
                     <navigationItem key="navigationItem" id="MBA-Vd-uH8"/>
                     <connections>
                         <outlet property="mapView" destination="EO8-7F-19F" id="ztU-wk-6th"/>
-                        <segue destination="Oej-dl-ljF" kind="show" identifier="presentAlbumVC" id="C47-FQ-3Np"/>
+                        <segue destination="Oej-dl-ljF" kind="show" identifier="presentAlbumsVC" id="C47-FQ-3Np"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NYs-ZL-mvu" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -17,7 +17,8 @@ class PhotoAlbumsVC: UIViewController, MKMapViewDelegate, UICollectionViewDelega
     @IBOutlet weak var albumCollectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
-    var albumPhotos = [Photo]()
+    var pin: Pin?
+    var albumPhotos: [Photo]?
 
     // Mark: - Life Cycle
 
@@ -33,7 +34,7 @@ class PhotoAlbumsVC: UIViewController, MKMapViewDelegate, UICollectionViewDelega
     // Mark: - Actions & Protocol
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return albumPhotos.count
+        return albumPhotos?.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) ->
