@@ -19,30 +19,22 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     var pin: Pin?
     var albumPhotos: [Photo]?
-
+    
     // Mark: - Life Cycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.isNavigationBarHidden = false
+        setup()
         
-        setFlowLayout()
-        albumCollectionView?.reloadData()
         print("\(pin?.title) - \(pin?.latitude)")
     }
-
-
-    // Mark: - Actions & Protocol
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return albumPhotos?.count ?? 0
+    
+    func setup() {
+        setFlowLayout()
+        albumCollectionView?.reloadData()
+        navigateToPin()
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCollectionViewCell", for: indexPath)
-        
-        return cell
-    }
-
     func setFlowLayout() {
         let interSpace: CGFloat = 3.0
         let lineSpace: CGFloat = 8.0
@@ -57,6 +49,28 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     // Mark: - Methods
     
+    private func navigateToPin() {
+        if let lat = pin?.latitude, let long = pin?.longitude {
+            let span = MKCoordinateSpanMake(0.05, 0.05)
+            let location = CLLocationCoordinate2DMake(CLLocationDegrees(lat), CLLocationDegrees(long))
+            
+            let region = MKCoordinateRegionMake(location, span)
+            topMapView.setRegion(region, animated: true)
+        }
+    }
+    
+    // Mark: - Actions & Protocol
 
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return albumPhotos?.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCollectionViewCell", for: indexPath)
+        
+        return cell
+    }
+    
     // Mark: - Helpers
 }

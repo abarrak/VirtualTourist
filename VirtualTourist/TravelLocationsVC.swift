@@ -40,11 +40,7 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        do {
-            try context.save()
-        } catch {
-            alertMessage("Failed", message: "Error while saving data.")
-        }
+        saveInStore()
     }
     
     // Mark: - Methods
@@ -71,7 +67,7 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     private func retrievePreviousLocation() {
         if currentLocation != nil {
-            navigateTo(currentLocation)
+            // navigateTo(currentLocation)
         }
     }
     
@@ -127,17 +123,14 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
     
-    private func navigateTo(_ location: Pin?) {
-        if let location = location {
-            let lat = location.latitude, long = location.longitude
-            let span = MKCoordinateSpanMake(0.5, 0.5)
-            let location = CLLocationCoordinate2DMake(CLLocationDegrees(lat), CLLocationDegrees(long))
-            
-            let region = MKCoordinateRegionMake(location, span)
-            mapView.setRegion(region, animated: true)
-        }
+    private func saveInStore() {
+        do {
+            try context.save()
+        } catch {
+            alertMessage("Failed", message: "Error while saving data.")
+        }        
     }
-    
+        
     private func buildAnnotationsList() {
         cleanMap()
         
@@ -219,13 +212,15 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let t = annotation.title!!
         let c = annotation.coordinate
         
-        if let _ = allPins?.contains(where: { $0.latitude == c.latitude && $0.longitude == c.longitude }){
+        if (allPins?.contains(){ $0.latitude == c.latitude && $0.longitude == c.longitude })! {
             print("Found ..")
             return
         }
         
         print("will create new to be persisted")
         
-        let _ = Pin(title: t, latitude: c.latitude, longitude: c.longitude, context: context)
+        let pin = Pin(title: t, latitude: c.latitude, longitude: c.longitude, context: context)
+        allPins?.append(pin)
     }
+    
 }
