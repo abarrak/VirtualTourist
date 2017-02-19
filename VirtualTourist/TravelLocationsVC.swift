@@ -20,7 +20,6 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     var pinAnnotations = [MKPointAnnotation]()
     var allPins: [Pin]?
-    var currentLocation: Pin?
     var pinToOpen: Pin?
     
     // Mark: - Life Cycle
@@ -41,6 +40,7 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         saveInStore()
+        persistCurrentLocation()
     }
     
     // Mark: - Methods
@@ -61,14 +61,36 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
             allPins = all
             buildAnnotationsList()
         } else {
-            alertMessage("Notice", message: "No Pin data are retrieved.")
+            alertMessage("Notice", message: "There are no pins yet.")
         }
     }
     
+    // Get previous MapView visible location that user left the app on.
     private func retrievePreviousLocation() {
-        if currentLocation != nil {
-            // navigateTo(currentLocation)
+        let location = UserDefaults.standard.dictionary(forKey: "last-location-on-map")
+
+        if location != nil {
+            let x = location?["x"] as! Double
+            let y = location?["y"] as! Double
+            let h = location?["h"] as! Double
+            let w = location?["w"] as! Double
+
+            let mapRect = MKMapRect(origin: MKMapPoint(x: x, y: y), size: MKMapSize(width: w, height: h))
+            mapView.setVisibleMapRect(mapRect, animated: true)
         }
+    }
+    
+    // Preserve current visible location on the map for the app next session.
+    private func persistCurrentLocation() {
+        let current = mapView.visibleMapRect
+        let x = current.origin.x
+        let y = current.origin.y
+        let h = current.size.height
+        let w = current.size.width
+        
+        let mapRectHashie = ["x": x, "y": y, "h": h, "w": w]
+        
+        UserDefaults.standard.set(mapRectHashie, forKey: "last-location-on-map")
     }
     
     // Listen for long presses on the map view, and invoke long gesture callback in response.
@@ -128,7 +150,7 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
             try context.save()
         } catch {
             alertMessage("Failed", message: "Error while saving data.")
-        }        
+        }
     }
         
     private func buildAnnotationsList() {
@@ -165,6 +187,27 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
     
+    private func pinFromAnnotation(_ annotation: MKAnnotation) -> Pin? {
+        // NOTE: If findBy returned nil (unlikely path) should we stop there ?
+        let c = annotation.coordinate
+        return Pin.findBy(latitude: c.latitude, longitude: c.longitude, context: context)
+    }
+    
+    private func addPin(_ annotation: MKAnnotation) {
+        let t = annotation.title!!
+        let c = annotation.coordinate
+        
+        if (allPins?.contains(){ $0.latitude == c.latitude && $0.longitude == c.longitude })! {
+            print("Found ..")
+            return
+        }
+        
+        print("will create new to be persisted")
+        
+        let pin = Pin(title: t, latitude: c.latitude, longitude: c.longitude, context: context)
+        allPins?.append(pin)
+    }
+    
     // Mark: - Actions & Protocol
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -199,28 +242,4 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
             albumVC.pin = pinToOpen
         }
     }
-
-    // Mark: - Helpers
-    
-    private func pinFromAnnotation(_ annotation: MKAnnotation) -> Pin? {
-        // NOTE: If findBy returned nil (unlikely path) should we stop there ?
-        let c = annotation.coordinate
-        return Pin.findBy(latitude: c.latitude, longitude: c.longitude, context: context)
-    }
-    
-    private func addPin(_ annotation: MKAnnotation) {
-        let t = annotation.title!!
-        let c = annotation.coordinate
-        
-        if (allPins?.contains(){ $0.latitude == c.latitude && $0.longitude == c.longitude })! {
-            print("Found ..")
-            return
-        }
-        
-        print("will create new to be persisted")
-        
-        let pin = Pin(title: t, latitude: c.latitude, longitude: c.longitude, context: context)
-        allPins?.append(pin)
-    }
-    
 }
