@@ -1,5 +1,5 @@
 //
-//  PhotoAlbumVC.swift
+//  PhotosAlbumVC.swift
 //  VirtualTourist
 //
 //  Created by Abdullah on 2/15/17.
@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class PhotoAlbumVC: UIViewController, MKMapViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
+class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, MKMapViewDelegate {
     // Mark: - Properties
     
     @IBOutlet weak var topMapView: MKMapView!
@@ -32,13 +32,11 @@ class PhotoAlbumVC: UIViewController, MKMapViewDelegate, UICollectionViewDelegat
 
 
     // Mark: - Actions & Protocol
-
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return albumPhotos?.count ?? 0
     }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) ->
-        UICollectionViewCell {
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCollectionViewCell", for: indexPath)
         

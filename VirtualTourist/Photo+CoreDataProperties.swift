@@ -18,6 +18,7 @@ extension Photo {
 
     @NSManaged public var id: Int32
     @NSManaged public var imgObject: NSData?
+    @NSManaged public var title: String?
     @NSManaged public var pin: Pin?
 
 }

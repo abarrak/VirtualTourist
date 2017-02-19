@@ -11,15 +11,16 @@ import MapKit
 import CoreLocation
 
 class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate {
+    
     // Mark: - Properties
     
+    let context = (UIApplication.shared.delegate as! AppDelegate).stack.context
+
     @IBOutlet weak var mapView: MKMapView!
     
     var pinAnnotations = [MKPointAnnotation]()
-    
     var allPins: [Pin]?
     var currentLocation: Pin?
-    
     var pinToOpen: Pin?
     
     // Mark: - Life Cycle
@@ -42,33 +43,31 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.canShowCallout = true
+            pinView!.canShowCallout = false
             pinView!.pinTintColor = .blue
-            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
             pinView!.animatesDrop = true
         }
         else {
             pinView!.annotation = annotation
         }
         
+        persistPin(annotation)
         return pinView
     }
     
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView,
-                 calloutAccessoryControlTapped control: UIControl) {
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if let annotation = view.annotation {
             pinToOpen = pinFromAnnotation(annotation)
-            performSegue(withIdentifier: "presentAlbumsVC", sender: self)
+            performSegue(withIdentifier: "presentAlbumVC", sender: self)
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "presentAlbumsVC" {
-            let albumVC = segue.destination as! PhotoAlbumVC
+        if segue.identifier == "presentAlbumVC" {
+            let albumVC = segue.destination as! PhotosAlbumVC
             albumVC.pin = pinToOpen
         }
     }
-    
     
     // Mark: - Methods
     
@@ -78,6 +77,12 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     private func retrieveStoredPins() {
+        if let all = Pin.all(context: context) {
+            allPins = all
+            buildAnnotationsList()
+        } else {
+            alertMessage("Notice", message: "No Pin date retrieved.")
+        }
         
     }
     
@@ -150,7 +155,7 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
     
-    private func buildPinsAnnotations() {
+    private func buildAnnotationsList() {
         cleanMap()
         
         if let all = allPins {
@@ -166,20 +171,20 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     private func buildAnnotation(pin: Pin) -> MKPointAnnotation? {
-        let lat = pin.latitude, long = pin.longtitude
-        
         // The lat and long are used to create a CLLocationCoordinates2D instance.
-        let latDegree = CLLocationDegrees(lat)
-        let longDegree = CLLocationDegrees(long)
-        let coordinate = CLLocationCoordinate2D(latitude: latDegree, longitude: longDegree)
+        let lat = pin.latitude, long = pin.longtitude
+        let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(lat),
+                                                longitude: CLLocationDegrees(long))
         
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
-        annotation.title = ""
+        annotation.title = pin.title
         
         return annotation
     }
     
+    private func addPin() {
+    }
     
     private func cleanMap() {
         if pinAnnotations.count > 0 {
@@ -190,10 +195,18 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // Mark: - Helpers
     
     private func pinFromAnnotation(_ annotation: MKAnnotation) -> Pin? {
-        return nil
+        let t = annotation.title!!
+        let c = annotation.coordinate
+        
+        return Pin(title: t, latitude: c.latitude, longtitude: c.longitude, context: context)
     }
     
-    private func persistPin() {
-        
+    private func persistPin(_ annotation: MKAnnotation) {
+        let _ = pinFromAnnotation(annotation)
+        do {
+            try context.save()
+        } catch {
+            alertMessage("Failed", message: "Error while saving pin.")
+        }
     }
 }
