@@ -21,13 +21,13 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     var albumPhotos: [Photo]?
 
     // Mark: - Life Cycle
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.isNavigationBarHidden = false
         
         setFlowLayout()
         albumCollectionView?.reloadData()
+        print("\(pin?.title) - \(pin?.latitude)")
     }
 
 

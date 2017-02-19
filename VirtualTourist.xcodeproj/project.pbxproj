@@ -71,6 +71,7 @@
 		B87DC7001E58C3DF00D8F7AE /* Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Convenience.swift; sourceTree = "<group>"; };
 		B87DC7021E59184800D8F7AE /* Model 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 3.xcdatamodel"; sourceTree = "<group>"; };
 		B8A67D621E59B6AE007DEB3F /* Model 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 4.xcdatamodel"; sourceTree = "<group>"; };
+		B8A67D631E59EB53007DEB3F /* Model 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 5.xcdatamodel"; sourceTree = "<group>"; };
 		B8D4BD551E57E0B300E86225 /* Pin+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataClass.swift"; sourceTree = "<group>"; };
 		B8D4BD561E57E0B300E86225 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		B8D4BD571E57E0B300E86225 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -673,6 +674,7 @@
 		B8F738F71E53C94F00412367 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				B8A67D631E59EB53007DEB3F /* Model 5.xcdatamodel */,
 				B8A67D621E59B6AE007DEB3F /* Model 4.xcdatamodel */,
 				B87DC7021E59184800D8F7AE /* Model 3.xcdatamodel */,
 				B8F8E5B71E57F106008DA21A /* Model 2.xcdatamodel */,

@@ -19,7 +19,7 @@ extension Pin {
     @NSManaged public var createdAt: NSDate?
     @NSManaged public var id: Int32
     @NSManaged public var latitude: Double
-    @NSManaged public var longtitude: Double
+    @NSManaged public var longitude: Double
     @NSManaged public var title: String?
     @NSManaged public var photos: NSSet?
 

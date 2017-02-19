@@ -129,7 +129,7 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     private func navigateTo(_ location: Pin?) {
         if let location = location {
-            let lat = location.latitude, long = location.longtitude
+            let lat = location.latitude, long = location.longitude
             let span = MKCoordinateSpanMake(0.5, 0.5)
             let location = CLLocationCoordinate2DMake(CLLocationDegrees(lat), CLLocationDegrees(long))
             
@@ -155,7 +155,7 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     private func buildAnnotation(pin: Pin) -> MKPointAnnotation? {
         // The lat and long are used to create a CLLocationCoordinates2D instance.
-        let lat = pin.latitude, long = pin.longtitude
+        let lat = pin.latitude, long = pin.longitude
         let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(lat),
                                                 longitude: CLLocationDegrees(long))
         
@@ -210,21 +210,22 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // Mark: - Helpers
     
     private func pinFromAnnotation(_ annotation: MKAnnotation) -> Pin? {
+        // NOTE: If findBy returned nil (unlikely path) should we stop there ?
         let c = annotation.coordinate
-        return Pin.findBy(latitude: c.latitude, longtitude: c.longitude, context: context)
+        return Pin.findBy(latitude: c.latitude, longitude: c.longitude, context: context)
     }
     
     private func addPin(_ annotation: MKAnnotation) {
         let t = annotation.title!!
         let c = annotation.coordinate
         
-        if let _ = allPins?.contains(where: { $0.latitude == c.latitude && $0.longtitude == c.longitude }){
+        if let _ = allPins?.contains(where: { $0.latitude == c.latitude && $0.longitude == c.longitude }){
             print("Found ..")
             return
         }
         
         print("will create new to be persisted")
         
-        let _ = Pin(title: t, latitude: c.latitude, longtitude: c.longitude, context: context)
+        let _ = Pin(title: t, latitude: c.latitude, longitude: c.longitude, context: context)
     }
 }

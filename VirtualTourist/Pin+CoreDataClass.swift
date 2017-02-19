@@ -14,12 +14,12 @@ public class Pin: NSManagedObject {
     
     // Mark: - Initializers
     
-    convenience init(title: String, latitude: Double, longtitude: Double, context: NSManagedObjectContext) {
+    convenience init(title: String, latitude: Double, longitude: Double, context: NSManagedObjectContext) {
         if let entity = NSEntityDescription.entity(forEntityName: "Pin", in: context) {
             self.init(entity: entity, insertInto: context)
             self.title = title
             self.latitude = latitude
-            self.longtitude = longtitude
+            self.longitude = longitude
             self.createdAt = NSDate()
         } else {
             fatalError("DB error: could not find entity model name.")
@@ -40,7 +40,8 @@ public class Pin: NSManagedObject {
     
     static func find(_ id: Int, context: NSManagedObjectContext) -> Pin? {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
-        fetchRequest.predicate = NSPredicate(format: "id == %@", id)
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
+        
         do {
             let results = try context.fetch(fetchRequest) as! [Pin]
             return results.first
@@ -49,12 +50,12 @@ public class Pin: NSManagedObject {
         }
     }
     
-    static func findBy(latitude: Double, longtitude: Double, context: NSManagedObjectContext) -> Pin? {
+    static func findBy(latitude: Double, longitude: Double, context: NSManagedObjectContext) -> Pin? {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
-        let p1 = NSPredicate(format: "latitude == %@", latitude)
-        let p2 = NSPredicate(format: "longtitude == %@", longtitude)
+        let p1 = NSPredicate(format: "latitude = %lf", latitude)
+        let p2 = NSPredicate(format: "longitude = %lf", longitude)
         fetchRequest.predicate = NSCompoundPredicate.init(type: .and, subpredicates: [p1, p2])
-        
+
         do {
             let results = try context.fetch(fetchRequest) as! [Pin]
             return results.first
