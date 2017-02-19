@@ -13,6 +13,8 @@ import CoreLocation
 class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, MKMapViewDelegate {
     // Mark: - Properties
     
+    let context = (UIApplication.shared.delegate as! AppDelegate).stack.context
+
     @IBOutlet weak var topMapView: MKMapView!
     @IBOutlet weak var albumCollectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
@@ -24,13 +26,11 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.isNavigationBarHidden = false
-        setup()
-        
-        print("\(pin?.title) - \(pin?.latitude)")
+        setupUI()
     }
     
-    func setup() {
+    func setupUI() {
+        navigationController?.isNavigationBarHidden = false
         setFlowLayout()
         albumCollectionView?.reloadData()
         navigateToPin()

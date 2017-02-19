@@ -33,7 +33,7 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.isNavigationBarHidden = true
+        navigationController?.isNavigationBarHidden = true
         print(allPins?.count ?? "")
     }
     
@@ -188,7 +188,6 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     private func pinFromAnnotation(_ annotation: MKAnnotation) -> Pin? {
-        // NOTE: If findBy returned nil (unlikely path) should we stop there ?
         let c = annotation.coordinate
         return Pin.findBy(latitude: c.latitude, longitude: c.longitude, context: context)
     }
@@ -196,13 +195,9 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     private func addPin(_ annotation: MKAnnotation) {
         let t = annotation.title!!
         let c = annotation.coordinate
-        
-        if (allPins?.contains(){ $0.latitude == c.latitude && $0.longitude == c.longitude })! {
-            print("Found ..")
+        if (allPins?.contains(where: { $0.latitude == c.latitude && $0.longitude == c.longitude }))! {
             return
         }
-        
-        print("will create new to be persisted")
         
         let pin = Pin(title: t, latitude: c.latitude, longitude: c.longitude, context: context)
         allPins?.append(pin)
