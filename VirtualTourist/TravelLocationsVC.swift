@@ -25,47 +25,25 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // Mark: - Life Cycle
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.isNavigationBarHidden = true
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         registerGestures()
         retrieveHistory()
     }
     
-    
-    // Mark: - Actions & Protocol
-    
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let reuseId = "pin"
-        
-        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
-        
-        if pinView == nil {
-            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.canShowCallout = false
-            pinView!.pinTintColor = .blue
-            pinView!.animatesDrop = true
-        }
-        else {
-            pinView!.annotation = annotation
-        }
-        
-        persistPin(annotation)
-        return pinView
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.isNavigationBarHidden = true
+        print(allPins?.count ?? "")
     }
     
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        if let annotation = view.annotation {
-            pinToOpen = pinFromAnnotation(annotation)
-            performSegue(withIdentifier: "presentAlbumVC", sender: self)
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "presentAlbumVC" {
-            let albumVC = segue.destination as! PhotosAlbumVC
-            albumVC.pin = pinToOpen
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        do {
+            try context.save()
+        } catch {
+            alertMessage("Failed", message: "Error while saving data.")
         }
     }
     
@@ -77,13 +55,18 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     private func retrieveStoredPins() {
-        if let all = Pin.all(context: context) {
+        // If pins are on the map, exit.
+        if allPins != nil {
+            return
+        }
+        let all = Pin.all(context: context)
+        
+        if all != nil && (all?.count)! > 0 {
             allPins = all
             buildAnnotationsList()
         } else {
-            alertMessage("Notice", message: "No Pin date retrieved.")
+            alertMessage("Notice", message: "No Pin data are retrieved.")
         }
-        
     }
     
     private func retrievePreviousLocation() {
@@ -104,7 +87,7 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     func handleLongPress(_ gestureRecognizer: UIGestureRecognizer) {
-        if gestureRecognizer.state == UIGestureRecognizerState.began {
+        if gestureRecognizer.state == UIGestureRecognizerState.ended {
             let touchPoint = gestureRecognizer.location(in: mapView)
             let newCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
             let location = CLLocation(latitude: newCoordinate.latitude, longitude: newCoordinate.longitude)
@@ -183,30 +166,65 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
         return annotation
     }
     
-    private func addPin() {
-    }
-    
     private func cleanMap() {
         if pinAnnotations.count > 0 {
             mapView.removeAnnotations(pinAnnotations)
         }
     }
     
+    // Mark: - Actions & Protocol
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let reuseId = "pin"
+        
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+        
+        if pinView == nil {
+            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pinView!.canShowCallout = false
+            pinView!.pinTintColor = .blue
+            pinView!.animatesDrop = true
+        }
+        else {
+            pinView!.annotation = annotation
+        }
+        
+        addPin(annotation)
+        return pinView
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        if let annotation = view.annotation {
+            pinToOpen = pinFromAnnotation(annotation)
+            performSegue(withIdentifier: "presentAlbumVC", sender: self)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "presentAlbumVC" {
+            let albumVC = segue.destination as! PhotosAlbumVC
+            albumVC.pin = pinToOpen
+        }
+    }
+
     // Mark: - Helpers
     
     private func pinFromAnnotation(_ annotation: MKAnnotation) -> Pin? {
+        let c = annotation.coordinate
+        return Pin.findBy(latitude: c.latitude, longtitude: c.longitude, context: context)
+    }
+    
+    private func addPin(_ annotation: MKAnnotation) {
         let t = annotation.title!!
         let c = annotation.coordinate
         
-        return Pin(title: t, latitude: c.latitude, longtitude: c.longitude, context: context)
-    }
-    
-    private func persistPin(_ annotation: MKAnnotation) {
-        let _ = pinFromAnnotation(annotation)
-        do {
-            try context.save()
-        } catch {
-            alertMessage("Failed", message: "Error while saving pin.")
+        if let _ = allPins?.contains(where: { $0.latitude == c.latitude && $0.longtitude == c.longitude }){
+            print("Found ..")
+            return
         }
+        
+        print("will create new to be persisted")
+        
+        let _ = Pin(title: t, latitude: c.latitude, longtitude: c.longitude, context: context)
     }
 }

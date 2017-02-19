@@ -22,7 +22,6 @@ public class Photo: NSManagedObject {
         }
     }
     
-    
     private func imageFromUrl(_ url: String) -> UIImage? {
         let imageURL = NSURL(string: url)
         if let imageData = NSData(contentsOf: imageURL! as URL) {

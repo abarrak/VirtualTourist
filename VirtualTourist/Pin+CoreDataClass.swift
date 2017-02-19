@@ -38,12 +38,26 @@ public class Pin: NSManagedObject {
         }
     }
     
-    static func find(context: NSManagedObjectContext, id: Int) -> Pin? {
+    static func find(_ id: Int, context: NSManagedObjectContext) -> Pin? {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
         fetchRequest.predicate = NSPredicate(format: "id == %@", id)
         do {
             let results = try context.fetch(fetchRequest) as! [Pin]
-            return results.first!
+            return results.first
+        } catch {
+            return nil
+        }
+    }
+    
+    static func findBy(latitude: Double, longtitude: Double, context: NSManagedObjectContext) -> Pin? {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        let p1 = NSPredicate(format: "latitude == %@", latitude)
+        let p2 = NSPredicate(format: "longtitude == %@", longtitude)
+        fetchRequest.predicate = NSCompoundPredicate.init(type: .and, subpredicates: [p1, p2])
+        
+        do {
+            let results = try context.fetch(fetchRequest) as! [Pin]
+            return results.first
         } catch {
             return nil
         }

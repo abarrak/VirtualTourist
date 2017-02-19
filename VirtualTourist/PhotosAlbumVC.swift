@@ -56,7 +56,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     // Mark: - Methods
-
+    
 
     // Mark: - Helpers
 }
