@@ -60,7 +60,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NYs-ZL-mvu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="401" y="103"/>
+            <point key="canvasLocation" x="442" y="103"/>
         </scene>
         <!--Photos Album-->
         <scene sceneID="qXH-BA-Nkb">
@@ -148,12 +148,13 @@
                     <connections>
                         <outlet property="albumCollectionView" destination="W0X-up-QTj" id="QtX-aX-7yh"/>
                         <outlet property="flowLayout" destination="Atj-1f-zY7" id="ydH-b0-XoA"/>
+                        <outlet property="newCollectionButton" destination="wBE-SJ-947" id="ckG-Fi-LNd"/>
                         <outlet property="topMapView" destination="nfB-PF-LvI" id="MSA-gh-gfu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6By-jm-SCZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1264.8" y="102.99850074962519"/>
+            <point key="canvasLocation" x="1353" y="103"/>
         </scene>
     </scenes>
 </document>

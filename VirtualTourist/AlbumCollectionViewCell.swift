@@ -15,7 +15,7 @@ class AlbumCollectionViewCell: UICollectionViewCell {
     
     // Mark: - Methods
     
-    func setMeme(image: UIImage) {
+    func setImage(image: UIImage) {
         imageView.image = image
     }
 }

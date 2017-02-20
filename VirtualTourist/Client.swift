@@ -16,7 +16,7 @@ class FlickerClient : AbstractAPI {
     
     // MARK: - Methods
     
-    func genericFlickerTask(parameters: [String:AnyObject], httpMethod: String = "GET", completionHandler: @escaping handlerType) {
+    func genericGETTask(parameters: [String:AnyObject], httpMethod: String = "GET", completionHandler: @escaping handlerType) {
         
         // Exit properly if no connection available.
         if !isNetworkAvaliable() {

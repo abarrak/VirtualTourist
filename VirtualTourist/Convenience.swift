@@ -9,6 +9,7 @@
 import Foundation
 
 extension FlickerClient {
+    
     // Mark: - Definitions
     
     typealias flickerPhotosCompletionHandler =
@@ -17,14 +18,23 @@ extension FlickerClient {
     
     // Mark: - High level methods
     
-    func searchForPhotos(completionHandler: @escaping flickerPhotosCompletionHandler) {
-        let parameters = ["":""]
+    func searchForPhotos(latitude: Double, longitude: Double, completionHandler: @escaping flickerPhotosCompletionHandler) {
         
-        let _ = genericFlickerTask(parameters: parameters as [String:AnyObject]) { (results, error) in
+        let parameters = [
+            Constants.ParameterKeys.Method: Constants.ParameterValues.SearchMethod,
+            Constants.ParameterKeys.APIKey: Constants.ParameterValues.APIKey,
+            Constants.ParameterKeys.BoundingBox: getBoundingBox(latitude: latitude, longitude: longitude),
+            Constants.ParameterKeys.SafeSearch: Constants.ParameterValues.UseSafeSearch,
+            Constants.ParameterKeys.Extras: Constants.ParameterValues.MediumURL,
+            Constants.ParameterKeys.Format: Constants.ParameterValues.ResponseFormat,
+            Constants.ParameterKeys.NoJSONCallback: Constants.ParameterValues.DisableJSONCallback
+        ]
+        
+        let _ = genericGETTask(parameters: parameters as [String:AnyObject]) { (results, error) in
             
             // Did the request failed?
             if error != nil {
-                completionHandler(false, nil, "Fetching students' info failed.")
+                completionHandler(false, nil, "Fetching photos failed.")
                 return
             }
             
@@ -37,7 +47,7 @@ extension FlickerClient {
             
             /* GUARD: Is the "photos" key in our result? */
             guard let photosDictionary = results?[Constants.ResponseKeys.Photos] as? [String:AnyObject] else {
-                completionHandler(false, nil, "Error encoundered. \(error)")
+                completionHandler(false, nil, "Error encoundered while parsing.")
                 return
             }
             
@@ -62,11 +72,21 @@ extension FlickerClient {
         
         for photo in photosList {
             let title = photo[FlickerClient.Constants.ResponseKeys.Title] as? String
-            let url = photo[FlickerClient.Constants.ResponseKeys.MediumURL] as? String
+            let url   = photo[FlickerClient.Constants.ResponseKeys.MediumURL] as? String
             if let url = url {
                 results?.append(["title": title!, "image_url": url])
             }
         }
         return results
+    }
+    
+    // Mark: - Helpers
+    
+    func getBoundingBox(latitude: Double, longitude: Double) -> String {
+        let minimumLon = max(longitude - Constants.SearchBBoxHalfWidth, Constants.SearchLonRange.0)
+        let minimumLat = max(latitude - Constants.SearchBBoxHalfHeight, Constants.SearchLatRange.0)
+        let maximumLon = min(longitude + Constants.SearchBBoxHalfWidth, Constants.SearchLonRange.1)
+        let maximumLat = min(latitude + Constants.SearchBBoxHalfHeight, Constants.SearchLatRange.1)
+        return "\(minimumLon),\(minimumLat),\(maximumLon),\(maximumLat)"
     }
 }
