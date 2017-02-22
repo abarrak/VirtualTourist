@@ -35,7 +35,6 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
-        print(allPins?.count ?? "")
     }
     
     override func viewWillDisappear(_ animated: Bool) {

@@ -29,7 +29,6 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>? {
         didSet {
-            // Whenever the frc changes, we execute the search and reload the table
             fetchedResultsController?.delegate = self
             executeSearch()
             albumCollectionView?.reloadData()
@@ -47,13 +46,13 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     // Mark: - Methods
     
-    func setupUI() {
+    private func setupUI() {
         navigationController?.isNavigationBarHidden = false
         setFlowLayout()
         navigateToPin()
     }
     
-    func setFlowLayout() {
+    private func setFlowLayout() {
         let interSpace: CGFloat = 6.0
         let lineSpace: CGFloat = 7.0
         let dimension = (view.frame.size.width - (2 * interSpace)) / 3.0
@@ -73,40 +72,62 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         }
     }
     
+    private func executeSearch() {
+        if let fc = fetchedResultsController {
+            do {
+                try fc.performFetch()
+            } catch let e as NSError {
+                print("Error while trying to perform a search: \n\(e)\n\(fetchedResultsController)")
+            }
+        }
+    }
+   
     private func loadPhotos() {
         let retrieved = fetchedResultsController?.fetchedObjects
 
         // if they are no photos in the store, get them from flicker.
         if retrieved == nil || (retrieved?.count)! < 1 {
-            FlickerClient.shared.searchForPhotos(latitude: (pin?.latitude)!, longitude: (pin?.longitude)!) {
-                (success, photoDictionary, errorString) in
-                
-                if !success {
-                    performUIUpdatesOnMain { self.alertMessage("Failed", message: errorString!) }
-                    return
-                }
-                photoDictionary?.forEach() { (i) in
-                    let t = i["title"]!
-                    let d = try? Data(contentsOf: URL(string: i["image_url"]!)!)
-
-                    performUIUpdatesOnMain {
-                        let photo = Photo(title: t, image: d! as NSData, context: self.context)
-                        photo.pin = self.pin
-                        self.pin?.addToPhotos(photo)
-                        do {
-                         try self.context.save()
-                        } catch {
-                            
-                        }
-                    }
-                }
-                // performUIUpdatesOnMain { self.albumCollectionView.reloadData() }
-            }
         } else {
             print("Already there !")
         }
     }
     
+    private func fetchNewPhotos() {
+        let lat = (pin?.latitude)!
+        let lon = (pin?.longitude)!
+        
+        FlickerClient.shared.searchForPhotos(latitude: lat, longitude: lon) {
+            (success, photoDictionary, errorString) in
+            
+            if !success {
+                performUIUpdatesOnMain { self.alertMessage("Failed", message: errorString!) }
+                return
+            }
+            photoDictionary?.forEach() { (i) in
+                let title = i["title"]
+                let url   = i["image_url"]!
+                let photoData = try? Data(contentsOf: URL(string: url)!)
+                
+                performUIUpdatesOnMain {
+                    self.createPhoto(title: title!, image: photoData! as NSData)
+                    do {
+                        try self.context.save()
+                    } catch {
+                        
+                    }
+                }
+            }
+        }
+    }
+    
+    // Add a photo to the store with association
+    private func createPhoto(title: String, image: NSData) {
+        let photo = Photo(title: title, image: image, context: context)
+        photo.pin = pin
+        pin?.addToPhotos(photo)
+    }
+    
+    // Remove a photo from the store
     private func deletePhoto(indexPath: IndexPath) {
         if let photo = fetchedResultsController?.object(at: indexPath) as? Photo {
             context.delete(photo)
@@ -144,18 +165,6 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             return 0
         }
     }
-    
-    func executeSearch() {
-        if let fc = fetchedResultsController {
-            do {
-                try fc.performFetch()
-            } catch let e as NSError {
-                print("Error while trying to perform a search: \n\(e)\n\(fetchedResultsController)")
-            }
-        }
-    }
-    
-    // MARK: - NSFetchedResultsControllerDelegate
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
                     didChange sectionInfo: NSFetchedResultsSectionInfo,
