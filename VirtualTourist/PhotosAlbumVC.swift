@@ -132,7 +132,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         }
     }
     
-    // Mark: - Actions & Protocol
+    // Mark: - Actions & Protocols
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         if let fc = fetchedResultsController {
@@ -173,7 +173,6 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                                                       for: ip) as! AlbumCollectionViewCell
             cell.setImage(#imageLiteral(resourceName: "Placeholder"))
         }
-        
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
@@ -216,6 +215,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     @IBAction func refreshPhotos(_ sender: UIBarButtonItem) {
         enableUI(false)
+        
         
         // delete all model photos
         albumCollectionView.performBatchUpdates({

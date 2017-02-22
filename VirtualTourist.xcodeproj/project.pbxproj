@@ -172,11 +172,11 @@
 				B87D88231E529CCF00EA5A8A /* AppDelegate.swift */,
 				B8ED5E431E57A75500D1456B /* GCDBlackBox.swift */,
 				B8ED5E461E57A75500D1456B /* ViewControllerExtension.swift */,
+				B8DA69F81E5E35DA00D37207 /* UIImageViewExtension.swift */,
 				B8ED5E471E57A75500D1456B /* Reachability.swift */,
 				B87D882A1E529CCF00EA5A8A /* Assets.xcassets */,
 				B87D882C1E529CCF00EA5A8A /* LaunchScreen.storyboard */,
 				B87D882F1E529CCF00EA5A8A /* Info.plist */,
-				B8DA69F81E5E35DA00D37207 /* UIImageViewExtension.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
