@@ -93,10 +93,17 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                         let photo = Photo(title: t, image: d! as NSData, context: self.context)
                         photo.pin = self.pin
                         self.pin?.addToPhotos(photo)
+                        do {
+                         try self.context.save()
+                        } catch {
+                            
+                        }
                     }
                 }
                 // performUIUpdatesOnMain { self.albumCollectionView.reloadData() }
             }
+        } else {
+            print("Already there !")
         }
     }
     
