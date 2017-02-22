@@ -87,12 +87,14 @@ class PhotosAlbumVC: CoreDataCollectionViewController, MKMapViewDelegate {
         }
     }
     
+    private func deletePhoto(indexPath: IndexPath) {
+        if let photo = fetchedResultsController?.object(at: indexPath) as? Photo {
+            context.delete(photo)
+        }
+    }
+
     // Mark: - Actions & Protocol
 
-//    override func collectionView(_ collectionView: UICollectionView,
-//                                 numberOfItemsInSection section: Int) -> Int {
-//        return albumPhotos.count
-//    }
     
     override func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -105,15 +107,6 @@ class PhotosAlbumVC: CoreDataCollectionViewController, MKMapViewDelegate {
         cell.setImage(image: deserializePhoto(photo.imgObject as! Data)!)
         return cell
     }
-   
-//    override func collectionView(_ collectionView: UICollectionView,
-//                                 commit editingStyle: UICollectionCellEditingStyle,
-//                                 forRowAt indexPath: IndexPath) {
-//        
-//        if let photo = fetchedResultsController?.object(at: indexPath) as? Photo, editingStyle == .delete {
-//            context.delete(photo)
-//        }
-//    }
     
     // Mark: - Helpers
 
