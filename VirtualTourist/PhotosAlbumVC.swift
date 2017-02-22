@@ -82,10 +82,12 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
    
     private func loadPhotos() {
         let retrieved = fetchedResultsController?.fetchedObjects
-
+        
         // if they are no photos in the store, get them from flicker.
         if retrieved == nil || (retrieved?.count)! < 1 {
             fetchNewPhotos()
+        } else {
+            print("already there")
         }
     }
     
@@ -105,10 +107,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 let url   = i["image_url"]!
                 let photoData = try? Data(contentsOf: URL(string: url)!)
                 
-                performUIUpdatesOnMain {
-                    self.createPhoto(title: title!, image: photoData! as NSData)
-                    super.saveInStore()
-                }
+                performUIUpdatesOnMain { self.createPhoto(title: title!, image: photoData! as NSData) }
             }
         }
     }
@@ -118,12 +117,16 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         let photo = Photo(title: title, image: image, context: context)
         photo.pin = pin
         pin?.addToPhotos(photo)
+        
+        super.saveInStore()
     }
     
     // Remove a photo from the store
     private func deletePhoto(_ indexPath: IndexPath) {
         if let photo = fetchedResultsController?.object(at: indexPath) as? Photo {
+            pin?.removeFromPhotos(photo)
             context.delete(photo)
+            super.saveInStore()
         }
     }
     
@@ -161,7 +164,6 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         deletePhoto(indexPath)
-        super.saveInStore()
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
@@ -202,6 +204,14 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         albumCollectionView?.reloadData()
     }
     
+    @IBAction func refreshPhotos(_ sender: UIBarButtonItem) {
+//        if let _ = pin?.deleteAllPhotos(context: context) {
+//            fetchNewPhotos()
+//        } else {
+//            alertMessage("Error", message: "Refresh falied. Try again.")
+//        }
+    }
+    
     // Mark: - Helpers
 
     private func enableUI(_ enabled: Bool) {
@@ -210,7 +220,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     private func serializePhoto(_ photo: UIImage) -> Data? {
         guard let seralized = UIImageJPEGRepresentation(photo, 1) else {
-            alertMessage("Error", message: "Photo not saved !")
+            alertMessage("Error", message: "Photo is not saved !")
             return nil
         }
         return seralized

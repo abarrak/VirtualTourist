@@ -143,10 +143,8 @@
 			isa = PBXGroup;
 			children = (
 				B8F738EF1E53BC7600412367 /* Models */,
-				B8F739021E53CF5400412367 /* CoreDataStack.swift */,
 				B8F738EE1E53BC6E00412367 /* Views */,
 				B8F738ED1E53BC5F00412367 /* Controllers */,
-				B87D88231E529CCF00EA5A8A /* AppDelegate.swift */,
 				B87D88511E529DEE00EA5A8A /* Supporting Files */,
 			);
 			path = VirtualTourist;
@@ -173,6 +171,7 @@
 		B87D88511E529DEE00EA5A8A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B87D88231E529CCF00EA5A8A /* AppDelegate.swift */,
 				B8ED5E431E57A75500D1456B /* GCDBlackBox.swift */,
 				B8ED5E441E57A75500D1456B /* StringExtension.swift */,
 				B8ED5E451E57A75500D1456B /* DateExtension.swift */,
@@ -239,6 +238,7 @@
 			children = (
 				B8ED5E4D1E57A8C000D1456B /* Clients */,
 				B8A9890E1E5B49D6007BC5ED /* Entities */,
+				B8F739021E53CF5400412367 /* CoreDataStack.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";

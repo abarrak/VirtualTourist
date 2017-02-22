@@ -84,7 +84,11 @@
                                 <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="y08-2B-rhk"/>
-                                    <barButtonItem title="New Collection" id="MlZ-kx-kQA"/>
+                                    <barButtonItem title="New Collection" id="MlZ-kx-kQA">
+                                        <connections>
+                                            <action selector="refreshPhotos:" destination="vdx-aB-JUF" id="SR0-yT-lfx"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="jqm-Cu-AVG"/>
                                 </items>
                             </toolbar>

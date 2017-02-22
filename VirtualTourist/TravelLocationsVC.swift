@@ -185,7 +185,8 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     private func addPin(_ annotation: MKAnnotation) {
         let t = annotation.title!!
         let c = annotation.coordinate
-        if (allPins?.contains(where: { $0.latitude == c.latitude && $0.longitude == c.longitude }))! {
+        let any = allPins?.contains(where: { $0.latitude == c.latitude && $0.longitude == c.longitude })
+        if let _ = any {
             return
         }
         
@@ -240,9 +241,9 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
                                                 cacheName: nil)
             // Inject it into the albumVC
             albumVC.fetchedResultsController = fc
+            
             // Inject the pin too!
             albumVC.pin = pinToOpen
         }
-        
     }
 }

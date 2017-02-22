@@ -49,10 +49,6 @@ extension UIViewController {
     
     // Persist modification back to the database
     func saveInStore() {
-        do {
-            try context.save()
-        } catch {
-            alertMessage("Failed", message: "Error while saving data.")
-        }
+        (UIApplication.shared.delegate as! AppDelegate).stack.save()
     }
 }
