@@ -11,8 +11,7 @@ import MapKit
 import CoreLocation
 import CoreData
 
-class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,
-MKMapViewDelegate, NSFetchedResultsControllerDelegate {
+class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, MKMapViewDelegate, UICollectionViewDataSourcePrefetching, NSFetchedResultsControllerDelegate {
     
     // Mark: - Properties
     
@@ -135,19 +134,6 @@ MKMapViewDelegate, NSFetchedResultsControllerDelegate {
     
     // Mark: - Actions & Protocol
     
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let photo = fetchedResultsController?.object(at: indexPath) as! Photo
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "albumViewCell",
-                                                      for: indexPath) as! AlbumCollectionViewCell
-        
-        cell.setImage(image: deserializePhoto(photo.imgObject as! Data)!)
-        return cell
-    }
-    
-    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         if let fc = fetchedResultsController {
             return (fc.sections?.count)!
@@ -155,7 +141,7 @@ MKMapViewDelegate, NSFetchedResultsControllerDelegate {
             return 0
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         if let fc = fetchedResultsController {
@@ -164,9 +150,30 @@ MKMapViewDelegate, NSFetchedResultsControllerDelegate {
             return 0
         }
     }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let photo = fetchedResultsController?.object(at: indexPath) as! Photo
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "albumViewCell",
+                                                      for: indexPath) as! AlbumCollectionViewCell
+        cell.setImage(deserializePhoto(photo.imgObject as! Data)!)
+
+        return cell
+    }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         deletePhoto(indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        for ip in indexPaths {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "albumViewCell",
+                                                      for: ip) as! AlbumCollectionViewCell
+            cell.setImage(#imageLiteral(resourceName: "Placeholder"))
+        }
+        
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,

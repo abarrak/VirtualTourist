@@ -20,14 +20,5 @@ public class Photo: NSManagedObject {
         } else {
             fatalError("DB error: could not find entity model name.")
         }
-    }
-    
-    private func imageFromUrl(_ url: String) -> UIImage? {
-        let imageURL = NSURL(string: url)
-        if let imageData = NSData(contentsOf: imageURL! as URL) {
-            return UIImage(data: imageData as Data)
-        } else {
-            return nil
-        }
-    }
+    }    
 }

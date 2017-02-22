@@ -109,7 +109,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="140" height="110"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mkS-4I-ZnS">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="mkS-4I-ZnS">
                                                     <rect key="frame" x="0.0" y="0.0" width="140" height="110"/>
                                                 </imageView>
                                             </subviews>
@@ -128,6 +128,7 @@
                                 <connections>
                                     <outlet property="dataSource" destination="vdx-aB-JUF" id="mE2-Nm-8Al"/>
                                     <outlet property="delegate" destination="vdx-aB-JUF" id="YWr-2d-VD7"/>
+                                    <outlet property="prefetchDataSource" destination="vdx-aB-JUF" id="J9n-fe-s5Q"/>
                                 </connections>
                             </collectionView>
                         </subviews>
@@ -162,4 +163,7 @@
             <point key="canvasLocation" x="1489" y="103"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Placeholder" width="750" height="750"/>
+    </resources>
 </document>
