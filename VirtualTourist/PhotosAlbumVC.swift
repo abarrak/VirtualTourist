@@ -12,7 +12,7 @@ import CoreLocation
 import CoreData
 
 class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,
-                     MKMapViewDelegate, NSFetchedResultsControllerDelegate {
+MKMapViewDelegate, NSFetchedResultsControllerDelegate {
     
     // Mark: - Properties
     
@@ -59,7 +59,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         flowLayout.minimumLineSpacing = lineSpace
         flowLayout.itemSize = CGSize(width: dimension, height: dimension)
     }
-
+    
     private func navigateToPin() {
         if let lat = pin?.latitude, let long = pin?.longitude {
             let span = MKCoordinateSpanMake(0.05, 0.05)
@@ -79,19 +79,19 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             }
         }
     }
-   
+    
     private func loadPhotos() {
         let retrieved = fetchedResultsController?.fetchedObjects
         
         // if they are no photos in the store, get them from flicker.
         if retrieved == nil || (retrieved?.count)! < 1 {
             fetchNewPhotos()
-        } else {
-            print("already there")
         }
     }
     
     private func fetchNewPhotos() {
+        self.enableUI(false)
+
         let lat = (pin?.latitude)!
         let lon = (pin?.longitude)!
         
@@ -100,15 +100,18 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             
             if !success {
                 performUIUpdatesOnMain { self.alertMessage("Failed", message: errorString!) }
-                return
+            } else {
+                photoDictionary?.forEach() { (i) in
+                    let title = i["title"]
+                    let url   = i["image_url"]!
+                    let photoData = try? Data(contentsOf: URL(string: url)!)
+                    
+                    performUIUpdatesOnMain {
+                        self.createPhoto(title: title!, image: photoData! as NSData)
+                    }
+                }
             }
-            photoDictionary?.forEach() { (i) in
-                let title = i["title"]
-                let url   = i["image_url"]!
-                let photoData = try? Data(contentsOf: URL(string: url)!)
-                
-                performUIUpdatesOnMain { self.createPhoto(title: title!, image: photoData! as NSData) }
-            }
+            performUIUpdatesOnMain { self.enableUI(true) }
         }
     }
     
@@ -131,7 +134,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     // Mark: - Actions & Protocol
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
@@ -143,7 +146,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         cell.setImage(image: deserializePhoto(photo.imgObject as! Data)!)
         return cell
     }
-
+    
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         if let fc = fetchedResultsController {
@@ -154,7 +157,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView,
-                                 numberOfItemsInSection section: Int) -> Int {
+                        numberOfItemsInSection section: Int) -> Int {
         if let fc = fetchedResultsController {
             return fc.sections![section].numberOfObjects
         } else {
@@ -205,11 +208,23 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     @IBAction func refreshPhotos(_ sender: UIBarButtonItem) {
+        enableUI(false)
         
+        // delete all model photos
+        albumCollectionView.performBatchUpdates({
+            let photos = self.pin?.photos
+            for p in photos! {
+                self.context.delete(p as! Photo)
+            }
+            super.saveInStore()
+        }, completion: nil)
+        
+        // get new collection
+        fetchNewPhotos()
     }
     
     // Mark: - Helpers
-
+    
     private func enableUI(_ enabled: Bool) {
         newCollectionButton.isEnabled = enabled
     }

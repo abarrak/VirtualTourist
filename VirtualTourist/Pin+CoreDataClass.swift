@@ -62,5 +62,9 @@ public class Pin: NSManagedObject {
         } catch {
             return nil
         }
-    }    
+    }
+    
+    func deleteAll() {
+        
+    }
 }
