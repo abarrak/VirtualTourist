@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import CoreData
 
 class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate {
     
@@ -234,7 +235,25 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "presentAlbumVC" {
             let albumVC = segue.destination as! PhotosAlbumVC
+
+            let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
+            fr.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true),
+                                  NSSortDescriptor(key: "title", ascending: false)]
+            
+            let pred = NSPredicate(format: "pin = %@", argumentArray: [pinToOpen!])
+            
+            fr.predicate = pred
+            
+            // Create FetchedResultsController
+            let fc = NSFetchedResultsController(fetchRequest: fr,
+                                                managedObjectContext: context,
+                                                sectionNameKeyPath: nil,
+                                                cacheName: nil)
+            // Inject it into the albumVC
+            albumVC.fetchedResultsController = fc
+            // Inject the pin too!
             albumVC.pin = pinToOpen
         }
+        
     }
 }

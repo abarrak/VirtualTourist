@@ -18,7 +18,8 @@ extension FlickerClient {
     
     // Mark: - High level methods
     
-    func searchForPhotos(latitude: Double, longitude: Double, completionHandler: @escaping flickerPhotosCompletionHandler) {
+    func searchForPhotos(latitude: Double, longitude: Double,
+                         completionHandler: @escaping flickerPhotosCompletionHandler) {
         
         let parameters = [
             Constants.ParameterKeys.Method: Constants.ParameterValues.SearchMethod,
@@ -27,10 +28,11 @@ extension FlickerClient {
             Constants.ParameterKeys.SafeSearch: Constants.ParameterValues.UseSafeSearch,
             Constants.ParameterKeys.Extras: Constants.ParameterValues.MediumURL,
             Constants.ParameterKeys.Format: Constants.ParameterValues.ResponseFormat,
-            Constants.ParameterKeys.NoJSONCallback: Constants.ParameterValues.DisableJSONCallback
+            Constants.ParameterKeys.NoJSONCallback: Constants.ParameterValues.DisableJSONCallback,
+            Constants.ParameterKeys.PerPage: Constants.ParameterValues.PerPage
         ]
         
-        let _ = genericGETTask(parameters: parameters as [String:AnyObject]) { (results, error) in
+        let _ = genericTask(parameters: parameters) { (results, error) in
             
             // Did the request failed?
             if error != nil {
@@ -67,26 +69,31 @@ extension FlickerClient {
         }
     }
     
-    func constructPhotosData(_ photosList: [[String:AnyObject]]) -> [[String:String]]? {
-        var results: [Dictionary<String, String>]?
+    func getRandomPageNumber() {
+        
+    }
+    
+    // Mark: - Helpers
+    
+    private func constructPhotosData(_ photosList: [[String:AnyObject]]) -> [[String:String]] {
+        var results: [[String:String]] = [Dictionary<String, String>]()
         
         for photo in photosList {
-            let title = photo[FlickerClient.Constants.ResponseKeys.Title] as? String
-            let url   = photo[FlickerClient.Constants.ResponseKeys.MediumURL] as? String
+            let title = photo[Constants.ResponseKeys.Title] as? String
+            let url = photo[Constants.ResponseKeys.MediumURL] as? String
+            
             if let url = url {
-                results?.append(["title": title!, "image_url": url])
+                results.append(["title": title!, "image_url": url])
             }
         }
         return results
     }
     
-    // Mark: - Helpers
-    
-    func getBoundingBox(latitude: Double, longitude: Double) -> String {
-        let minimumLon = max(longitude - Constants.SearchBBoxHalfWidth, Constants.SearchLonRange.0)
-        let minimumLat = max(latitude - Constants.SearchBBoxHalfHeight, Constants.SearchLatRange.0)
-        let maximumLon = min(longitude + Constants.SearchBBoxHalfWidth, Constants.SearchLonRange.1)
-        let maximumLat = min(latitude + Constants.SearchBBoxHalfHeight, Constants.SearchLatRange.1)
-        return "\(minimumLon),\(minimumLat),\(maximumLon),\(maximumLat)"
+    private func getBoundingBox(latitude: Double, longitude: Double) -> String {
+        let minLon = max(longitude - Constants.SearchBBoxHalfWidth, Constants.SearchLonRange.0)
+        let minLat = max(latitude  - Constants.SearchBBoxHalfHeight, Constants.SearchLatRange.0)
+        let maxLon = min(longitude + Constants.SearchBBoxHalfWidth, Constants.SearchLonRange.1)
+        let maxLat = min(latitude  + Constants.SearchBBoxHalfHeight, Constants.SearchLatRange.1)
+        return "\(minLon),\(minLat),\(maxLon),\(maxLat)"
     }
 }

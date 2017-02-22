@@ -16,7 +16,7 @@ class FlickerClient : AbstractAPI {
     
     // MARK: - Methods
     
-    func genericGETTask(parameters: [String:AnyObject], httpMethod: String = "GET", completionHandler: @escaping handlerType) {
+    func genericTask(parameters: [String:String], httpMethod: String = "GET", completionHandler: @escaping handlerType) {
         
         // Exit properly if no connection available.
         if !isNetworkAvaliable() {
@@ -25,7 +25,7 @@ class FlickerClient : AbstractAPI {
         }
         
         // Build the request from URL and configure it ..
-        var request = URLRequest(url: flickerURLFromParameters(parameters))
+        var request = URLRequest(url: flickerURLFromParameters(parameters as [String : AnyObject]))
         request.httpMethod = httpMethod
         
         // Make the request ..
@@ -77,6 +77,7 @@ class FlickerClient : AbstractAPI {
             components.queryItems!.append(queryItem)
         }
         
+        print(components.url!)
         return components.url!
     }
     
@@ -101,10 +102,12 @@ class FlickerClient : AbstractAPI {
     
     // MARK: - Shared Instance
     
-    class func sharedInstance() -> FlickerClient {
-        struct Singleton {
-            static var sharedInstance = FlickerClient()
+    class var shared: FlickerClient {
+        get {
+            struct Singleton {
+                static var sharedInstance = FlickerClient()
+            }
+            return Singleton.sharedInstance
         }
-        return Singleton.sharedInstance
     }
 }

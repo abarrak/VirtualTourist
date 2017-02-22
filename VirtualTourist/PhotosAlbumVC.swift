@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, MKMapViewDelegate {
+class PhotosAlbumVC: CoreDataCollectionViewController, MKMapViewDelegate {
     
     // Mark: - Properties
     
@@ -22,7 +22,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     @IBOutlet weak var newCollectionButton: UIBarButtonItem!
     
     var pin: Pin?
-    var albumPhotos: [Photo]?
+    var albumPhotos = [UIImage]()
     
     let imageEncodingQ = DispatchQueue(label: "ImageEncoding", attributes: .concurrent)
     
@@ -30,30 +30,29 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         setupUI()
+        loadPhotos()
     }
+    
+    // Mark: - Methods
     
     func setupUI() {
         navigationController?.isNavigationBarHidden = false
         setFlowLayout()
-        albumCollectionView?.reloadData()
         navigateToPin()
     }
     
     func setFlowLayout() {
-        let interSpace: CGFloat = 3.0
-        let lineSpace: CGFloat = 8.0
+        let interSpace: CGFloat = 6.0
+        let lineSpace: CGFloat = 7.0
         let dimension = (view.frame.size.width - (2 * interSpace)) / 3.0
         
         flowLayout.minimumInteritemSpacing = interSpace
         flowLayout.minimumLineSpacing = lineSpace
         flowLayout.itemSize = CGSize(width: dimension, height: dimension)
-        
-        // flowLayout.sectionInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
     }
-    
-    // Mark: - Methods
-    
+
     private func navigateToPin() {
         if let lat = pin?.latitude, let long = pin?.longitude {
             let span = MKCoordinateSpanMake(0.05, 0.05)
@@ -65,30 +64,56 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     private func loadPhotos() {
-        // if they are in the store, get them, then stop.
-        let retrieved = pin?.photos
-        if retrieved != nil && (retrieved?.count)! > 0 {
-            albumCollectionView.reloadData()
+        let retrieved = fetchedResultsController?.fetchedObjects
+        
+        // if they are no photos in the store, get them from flicker.
+        if retrieved == nil || (retrieved?.count)! < 1 {
+            FlickerClient.shared.searchForPhotos(latitude: (pin?.latitude)!, longitude: (pin?.longitude)!) {
+                (success, photoDictionary, errorString) in
+                
+                if !success {
+                    performUIUpdatesOnMain { self.alertMessage("Failed", message: errorString!) }
+                    return
+                }
+                photoDictionary?.forEach() { (i) in
+                    let d = try? Data(contentsOf: URL(string: i["image_url"]!)!)
+                    
+                    performUIUpdatesOnMain {
+                        self.albumPhotos.append(self.deserializePhoto(d!)!)
+                        self.albumCollectionView.reloadData()
+                    }
+                }
+            }
         }
-        // otherwise, get to flicker please.
     }
-    
     
     // Mark: - Actions & Protocol
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return albumPhotos?.count ?? 0
-    }
+//    override func collectionView(_ collectionView: UICollectionView,
+//                                 numberOfItemsInSection section: Int) -> Int {
+//        return albumPhotos.count
+//    }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCollectionViewCell",
+    override func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let photo = fetchedResultsController?.object(at: indexPath) as! Photo
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "albumCellView",
                                                       for: indexPath) as! AlbumCollectionViewCell
-        let data = (pin?.photos?.allObjects as! [Data])[indexPath.row]
         
-        cell.setImage(image: deserializePhoto(data)!)
-        
+        cell.setImage(image: deserializePhoto(photo.imgObject as! Data)!)
         return cell
     }
+   
+//    override func collectionView(_ collectionView: UICollectionView,
+//                                 commit editingStyle: UICollectionCellEditingStyle,
+//                                 forRowAt indexPath: IndexPath) {
+//        
+//        if let photo = fetchedResultsController?.object(at: indexPath) as? Photo, editingStyle == .delete {
+//            context.delete(photo)
+//        }
+//    }
     
     // Mark: - Helpers
 
@@ -107,4 +132,5 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     private func deserializePhoto(_ data: Data) -> UIImage? {
         return UIImage(data: data)
     }
+    
 }
