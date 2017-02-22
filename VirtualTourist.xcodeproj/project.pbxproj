@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B86F836C1E5DC750002FBB74 /* AlbumCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86F836B1E5DC750002FBB74 /* AlbumCollectionViewHeader.swift */; };
-		B86F836E1E5DC774002FBB74 /* AlbumCollectionViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86F836D1E5DC774002FBB74 /* AlbumCollectionViewFooter.swift */; };
-		B8766B6A1E5CE71C007F0335 /* CoreDataCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8766B691E5CE71C007F0335 /* CoreDataCollectionViewController.swift */; };
 		B87AFFE01E54CE4B00631081 /* AlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B87AFFDF1E54CE4B00631081 /* AlbumCollectionViewCell.swift */; };
 		B87D88241E529CCF00EA5A8A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B87D88231E529CCF00EA5A8A /* AppDelegate.swift */; };
 		B87D88291E529CCF00EA5A8A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B87D88271E529CCF00EA5A8A /* Main.storyboard */; };
@@ -56,9 +53,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B86F836B1E5DC750002FBB74 /* AlbumCollectionViewHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumCollectionViewHeader.swift; sourceTree = "<group>"; };
-		B86F836D1E5DC774002FBB74 /* AlbumCollectionViewFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumCollectionViewFooter.swift; sourceTree = "<group>"; };
-		B8766B691E5CE71C007F0335 /* CoreDataCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataCollectionViewController.swift; sourceTree = "<group>"; };
 		B87AFFDF1E54CE4B00631081 /* AlbumCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		B87D88201E529CCF00EA5A8A /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B87D88231E529CCF00EA5A8A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -227,7 +221,6 @@
 			children = (
 				B8F738F01E53BCBE00412367 /* TravelLocationsVC.swift */,
 				B8F738F21E53BCF400412367 /* PhotosAlbumVC.swift */,
-				B8766B691E5CE71C007F0335 /* CoreDataCollectionViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -237,8 +230,6 @@
 			children = (
 				B87D88271E529CCF00EA5A8A /* Main.storyboard */,
 				B87AFFDF1E54CE4B00631081 /* AlbumCollectionViewCell.swift */,
-				B86F836B1E5DC750002FBB74 /* AlbumCollectionViewHeader.swift */,
-				B86F836D1E5DC774002FBB74 /* AlbumCollectionViewFooter.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -401,12 +392,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8D4BD5B1E57E0B300E86225 /* Photo+CoreDataClass.swift in Sources */,
-				B86F836E1E5DC774002FBB74 /* AlbumCollectionViewFooter.swift in Sources */,
 				B87DC6FD1E58BF6D00D8F7AE /* Constants.swift in Sources */,
 				B8F738F11E53BCBE00412367 /* TravelLocationsVC.swift in Sources */,
 				B8F738F31E53BCF400412367 /* PhotosAlbumVC.swift in Sources */,
 				B8D4BD591E57E0B300E86225 /* Pin+CoreDataClass.swift in Sources */,
-				B86F836C1E5DC750002FBB74 /* AlbumCollectionViewHeader.swift in Sources */,
 				B8D4BD5A1E57E0B300E86225 /* Pin+CoreDataProperties.swift in Sources */,
 				B8F738F91E53C94F00412367 /* Model.xcdatamodeld in Sources */,
 				B87DC7011E58C3DF00D8F7AE /* Convenience.swift in Sources */,
@@ -417,7 +406,6 @@
 				B87D88241E529CCF00EA5A8A /* AppDelegate.swift in Sources */,
 				B8ED5E4C1E57A75500D1456B /* Reachability.swift in Sources */,
 				B87AFFE01E54CE4B00631081 /* AlbumCollectionViewCell.swift in Sources */,
-				B8766B6A1E5CE71C007F0335 /* CoreDataCollectionViewController.swift in Sources */,
 				B8ED5E4B1E57A75500D1456B /* ViewControllerExtension.swift in Sources */,
 				B8ED5E501E57B73E00D1456B /* AbstractAPI.swift in Sources */,
 				B8D4BD5C1E57E0B300E86225 /* Photo+CoreDataProperties.swift in Sources */,

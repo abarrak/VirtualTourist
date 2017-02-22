@@ -98,7 +98,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="albumPhotoCell" id="WbQ-w4-W32" customClass="AlbumCollectionViewCell" customModule="VirtualTourist" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="albumViewCell" id="WbQ-w4-W32" customClass="AlbumCollectionViewCell" customModule="VirtualTourist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="140" height="110"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -123,6 +123,7 @@
                                 </cells>
                                 <connections>
                                     <outlet property="dataSource" destination="vdx-aB-JUF" id="mE2-Nm-8Al"/>
+                                    <outlet property="delegate" destination="vdx-aB-JUF" id="YWr-2d-VD7"/>
                                 </connections>
                             </collectionView>
                         </subviews>

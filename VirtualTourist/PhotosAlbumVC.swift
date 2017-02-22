@@ -9,22 +9,32 @@
 import UIKit
 import MapKit
 import CoreLocation
+import CoreData
 
-class PhotosAlbumVC: CoreDataCollectionViewController, MKMapViewDelegate {
+class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,
+                     MKMapViewDelegate, NSFetchedResultsControllerDelegate {
     
     // Mark: - Properties
     
     let context = (UIApplication.shared.delegate as! AppDelegate).stack.context
-
+    
     @IBOutlet weak var topMapView: MKMapView!
     @IBOutlet weak var albumCollectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var newCollectionButton: UIBarButtonItem!
     
     var pin: Pin?
-    var albumPhotos = [UIImage]()
     
     let imageEncodingQ = DispatchQueue(label: "ImageEncoding", attributes: .concurrent)
+    
+    var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>? {
+        didSet {
+            // Whenever the frc changes, we execute the search and reload the table
+            fetchedResultsController?.delegate = self
+            executeSearch()
+            albumCollectionView?.reloadData()
+        }
+    }
     
     // Mark: - Life Cycle
     
@@ -65,7 +75,7 @@ class PhotosAlbumVC: CoreDataCollectionViewController, MKMapViewDelegate {
     
     private func loadPhotos() {
         let retrieved = fetchedResultsController?.fetchedObjects
-        
+
         // if they are no photos in the store, get them from flicker.
         if retrieved == nil || (retrieved?.count)! < 1 {
             FlickerClient.shared.searchForPhotos(latitude: (pin?.latitude)!, longitude: (pin?.longitude)!) {
@@ -76,13 +86,16 @@ class PhotosAlbumVC: CoreDataCollectionViewController, MKMapViewDelegate {
                     return
                 }
                 photoDictionary?.forEach() { (i) in
+                    let t = i["title"]!
                     let d = try? Data(contentsOf: URL(string: i["image_url"]!)!)
-                    
+
                     performUIUpdatesOnMain {
-                        self.albumPhotos.append(self.deserializePhoto(d!)!)
-                        self.albumCollectionView.reloadData()
+                        let photo = Photo(title: t, image: d! as NSData, context: self.context)
+                        photo.pin = self.pin
+                        self.pin?.addToPhotos(photo)
                     }
                 }
+                // performUIUpdatesOnMain { self.albumCollectionView.reloadData() }
             }
         }
     }
@@ -92,20 +105,87 @@ class PhotosAlbumVC: CoreDataCollectionViewController, MKMapViewDelegate {
             context.delete(photo)
         }
     }
-
+    
     // Mark: - Actions & Protocol
 
-    
-    override func collectionView(_ collectionView: UICollectionView,
+    func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let photo = fetchedResultsController?.object(at: indexPath) as! Photo
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "albumCellView",
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "albumViewCell",
                                                       for: indexPath) as! AlbumCollectionViewCell
         
         cell.setImage(image: deserializePhoto(photo.imgObject as! Data)!)
         return cell
+    }
+
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        if let fc = fetchedResultsController {
+            return (fc.sections?.count)!
+        } else {
+            return 0
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                                 numberOfItemsInSection section: Int) -> Int {
+        if let fc = fetchedResultsController {
+            return fc.sections![section].numberOfObjects
+        } else {
+            return 0
+        }
+    }
+    
+    func executeSearch() {
+        if let fc = fetchedResultsController {
+            do {
+                try fc.performFetch()
+            } catch let e as NSError {
+                print("Error while trying to perform a search: \n\(e)\n\(fetchedResultsController)")
+            }
+        }
+    }
+    
+    // MARK: - NSFetchedResultsControllerDelegate
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange sectionInfo: NSFetchedResultsSectionInfo,
+                    atSectionIndex sectionIndex: Int,
+                    for type: NSFetchedResultsChangeType) {
+        
+        let set = IndexSet(integer: sectionIndex)
+        
+        switch (type) {
+        case .insert:
+            albumCollectionView?.insertSections(set)
+        case .delete:
+            albumCollectionView?.deleteSections(set)
+        default:
+            break
+        }
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange anObject: Any, at indexPath: IndexPath?,
+                    for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        
+        switch(type) {
+        case .insert:
+            albumCollectionView?.insertItems(at: [newIndexPath!])
+        case .delete:
+            albumCollectionView?.deleteItems(at: [indexPath!])
+        case .update:
+            albumCollectionView?.reloadItems(at: [indexPath!])
+        case .move:
+            albumCollectionView?.deleteItems(at: [indexPath!])
+            albumCollectionView?.insertItems(at: [newIndexPath!])
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        albumCollectionView?.reloadData()
     }
     
     // Mark: - Helpers
@@ -125,5 +205,4 @@ class PhotosAlbumVC: CoreDataCollectionViewController, MKMapViewDelegate {
     private func deserializePhoto(_ data: Data) -> UIImage? {
         return UIImage(data: data)
     }
-    
 }
