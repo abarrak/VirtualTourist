@@ -186,7 +186,7 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let t = annotation.title!!
         let c = annotation.coordinate
         let any = allPins?.contains(where: { $0.latitude == c.latitude && $0.longitude == c.longitude })
-        if let _ = any {
+        if any! {
             return
         }
         
@@ -224,6 +224,11 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "presentAlbumVC" {
+            
+            if pinToOpen == nil {
+                return
+            }
+            
             let albumVC = segue.destination as! PhotosAlbumVC
 
             let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")

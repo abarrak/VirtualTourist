@@ -205,11 +205,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     @IBAction func refreshPhotos(_ sender: UIBarButtonItem) {
-//        if let _ = pin?.deleteAllPhotos(context: context) {
-//            fetchNewPhotos()
-//        } else {
-//            alertMessage("Error", message: "Refresh falied. Try again.")
-//        }
+        
     }
     
     // Mark: - Helpers

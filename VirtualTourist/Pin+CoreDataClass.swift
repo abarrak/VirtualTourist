@@ -62,20 +62,5 @@ public class Pin: NSManagedObject {
         } catch {
             return nil
         }
-    }
-    
-    func deleteAllPhotos(context: NSManagedObjectContext) -> Bool {
-        // Drop all related photos to the model instance
-        
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
-        fetchRequest.predicate = NSPredicate(format: "pin = %@", self)
-        
-        do {
-            let results = try context.fetch(fetchRequest) as! [Photo]
-            self.removeFromPhotos(NSSet(array: results))
-            return true
-        } catch {
-            return false
-        }
-    }
+    }    
 }
