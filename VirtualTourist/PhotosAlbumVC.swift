@@ -16,8 +16,6 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     // Mark: - Properties
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).stack.context
-    
     @IBOutlet weak var topMapView: MKMapView!
     @IBOutlet weak var albumCollectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
@@ -87,6 +85,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
 
         // if they are no photos in the store, get them from flicker.
         if retrieved == nil || (retrieved?.count)! < 1 {
+            fetchNewPhotos()
         } else {
             print("Already there !")
         }
@@ -110,11 +109,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 
                 performUIUpdatesOnMain {
                     self.createPhoto(title: title!, image: photoData! as NSData)
-                    do {
-                        try self.context.save()
-                    } catch {
-                        
-                    }
+                    super.saveInStore()
                 }
             }
         }

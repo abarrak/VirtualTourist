@@ -7,8 +7,16 @@
 //
 
 import UIKit
+import CoreData
 
 extension UIViewController {
+
+    var context: NSManagedObjectContext {
+        get {
+            return (UIApplication.shared.delegate as! AppDelegate).stack.context
+        }
+    }
+
     // Utility for informational alert
     func alertMessage(_ title: String, message: String, completionHandler: ((UIAlertAction) -> Void)? = nil) {
         let alert = UIAlertController(title: title,
@@ -37,5 +45,14 @@ extension UIViewController {
         }))
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    // Persist modification back to the database
+    func saveInStore() {
+        do {
+            try context.save()
+        } catch {
+            alertMessage("Failed", message: "Error while saving data.")
+        }
     }
 }

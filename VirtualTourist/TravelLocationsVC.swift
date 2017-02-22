@@ -15,8 +15,6 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // Mark: - Properties
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).stack.context
-
     @IBOutlet weak var mapView: MKMapView!
     
     var pinAnnotations = [MKPointAnnotation]()
@@ -144,15 +142,7 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
             })
         }
     }
-    
-    private func saveInStore() {
-        do {
-            try context.save()
-        } catch {
-            alertMessage("Failed", message: "Error while saving data.")
-        }
-    }
-        
+            
     private func buildAnnotationsList() {
         cleanMap()
         
