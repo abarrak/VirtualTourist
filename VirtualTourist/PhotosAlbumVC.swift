@@ -86,8 +86,6 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         // if they are no photos in the store, get them from flicker.
         if retrieved == nil || (retrieved?.count)! < 1 {
             fetchNewPhotos()
-        } else {
-            print("Already there !")
         }
     }
     
@@ -123,7 +121,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     // Remove a photo from the store
-    private func deletePhoto(indexPath: IndexPath) {
+    private func deletePhoto(_ indexPath: IndexPath) {
         if let photo = fetchedResultsController?.object(at: indexPath) as? Photo {
             context.delete(photo)
         }
@@ -159,6 +157,11 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         } else {
             return 0
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        deletePhoto(indexPath)
+        super.saveInStore()
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
