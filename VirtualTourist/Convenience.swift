@@ -28,7 +28,7 @@ extension FlickerClient {
             (pageNum) in
             
             // Then kick off another request ..
-            let params = self.paramsForRequest(latitude: latitude, longitude: longitude, pageNum: pageNum)
+            let params = self.requestParams(latitude: latitude, longitude: longitude, pageNum: pageNum)
             
             let _ = self.genericTask(parameters: params) {
                 (results, error) in
@@ -79,7 +79,7 @@ extension FlickerClient {
                        continuationHandler: @escaping internalContinuationHandler) {
         var random = 1
         
-        let _ = genericTask(parameters: paramsForRequest(latitude: latitude, longitude: longitude)) {
+        let _ = genericTask(parameters: requestParams(latitude: latitude, longitude: longitude)) {
             (results, error) in
             
             // Did the request failed?
@@ -101,14 +101,6 @@ extension FlickerClient {
                 return
             }
             
-            /* GUARD: Is the "photo" key in photosDictionary? */
-            let photosArray = photosDictionary[Constants.ResponseKeys.Photo] as? [[String: AnyObject]]
-            
-            guard photosArray != nil else {
-                completionHandler(false, nil, "Photos Unprocessed correctly !")
-                return
-            }
-            
             /* GUARD: Is "pages" key in the photosDictionary? */
             guard let totalPages = photosDictionary[Constants.ResponseKeys.Pages] as? Int else {
                 completionHandler(false, nil, "No pages found.")
@@ -123,10 +115,9 @@ extension FlickerClient {
     }
     
     
-    
     // Mark: - Helpers
     
-    private func paramsForRequest(latitude: Double, longitude: Double, pageNum: String? = nil) -> [String:String] {
+    private func requestParams(latitude: Double, longitude: Double, pageNum: String? = nil) -> [String:String] {
         return [
             Constants.ParameterKeys.Method: Constants.ParameterValues.SearchMethod,
             Constants.ParameterKeys.APIKey: Constants.ParameterValues.APIKey,
