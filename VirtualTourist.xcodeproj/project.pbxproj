@@ -22,7 +22,7 @@
 		B8D4BD5B1E57E0B300E86225 /* Photo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D4BD571E57E0B300E86225 /* Photo+CoreDataClass.swift */; };
 		B8D4BD5C1E57E0B300E86225 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D4BD581E57E0B300E86225 /* Photo+CoreDataProperties.swift */; };
 		B8DA69F91E5E35DA00D37207 /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8DA69F81E5E35DA00D37207 /* UIImageViewExtension.swift */; };
-		B8ED5E481E57A75500D1456B /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ED5E431E57A75500D1456B /* GCDBlackBox.swift */; };
+		B8ED5E481E57A75500D1456B /* AsyncHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ED5E431E57A75500D1456B /* AsyncHelpers.swift */; };
 		B8ED5E4B1E57A75500D1456B /* ViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ED5E461E57A75500D1456B /* ViewControllerExtension.swift */; };
 		B8ED5E4C1E57A75500D1456B /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ED5E471E57A75500D1456B /* Reachability.swift */; };
 		B8ED5E501E57B73E00D1456B /* AbstractAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ED5E4F1E57B73E00D1456B /* AbstractAPI.swift */; };
@@ -76,7 +76,7 @@
 		B8D4BD571E57E0B300E86225 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		B8D4BD581E57E0B300E86225 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		B8DA69F81E5E35DA00D37207 /* UIImageViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
-		B8ED5E431E57A75500D1456B /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
+		B8ED5E431E57A75500D1456B /* AsyncHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncHelpers.swift; sourceTree = "<group>"; };
 		B8ED5E461E57A75500D1456B /* ViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerExtension.swift; sourceTree = "<group>"; };
 		B8ED5E471E57A75500D1456B /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		B8ED5E4F1E57B73E00D1456B /* AbstractAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbstractAPI.swift; sourceTree = "<group>"; };
@@ -170,7 +170,7 @@
 			isa = PBXGroup;
 			children = (
 				B87D88231E529CCF00EA5A8A /* AppDelegate.swift */,
-				B8ED5E431E57A75500D1456B /* GCDBlackBox.swift */,
+				B8ED5E431E57A75500D1456B /* AsyncHelpers.swift */,
 				B8ED5E461E57A75500D1456B /* ViewControllerExtension.swift */,
 				B8DA69F81E5E35DA00D37207 /* UIImageViewExtension.swift */,
 				B8ED5E471E57A75500D1456B /* Reachability.swift */,
@@ -405,7 +405,7 @@
 				B8ED5E4B1E57A75500D1456B /* ViewControllerExtension.swift in Sources */,
 				B8ED5E501E57B73E00D1456B /* AbstractAPI.swift in Sources */,
 				B8D4BD5C1E57E0B300E86225 /* Photo+CoreDataProperties.swift in Sources */,
-				B8ED5E481E57A75500D1456B /* GCDBlackBox.swift in Sources */,
+				B8ED5E481E57A75500D1456B /* AsyncHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 import CoreData
 
-class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, MKMapViewDelegate, UICollectionViewDataSourcePrefetching, NSFetchedResultsControllerDelegate {
+class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, MKMapViewDelegate,  NSFetchedResultsControllerDelegate {
     
     // Mark: - Properties
     
@@ -98,19 +98,21 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             (success, photoDictionary, errorString) in
             
             if !success {
-                performUIUpdatesOnMain { self.alertMessage("Failed", message: errorString!) }
+                performAsync { self.alertMessage("Failed", message: errorString!) }
             } else {
+                
                 photoDictionary?.forEach() { (i) in
+                    
                     let title = i["title"]
                     let url   = i["image_url"]!
                     let photoData = try? Data(contentsOf: URL(string: url)!)
                     
-                    performUIUpdatesOnMain {
+                    performAsync {
                         self.createPhoto(title: title!, image: photoData! as NSData)
                     }
                 }
             }
-            performUIUpdatesOnMain { self.enableUI(true) }
+            performAsync { self.enableUI(true) }
         }
     }
     
@@ -158,6 +160,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "albumViewCell",
                                                       for: indexPath) as! AlbumCollectionViewCell
+        
         cell.setImage(deserializePhoto(photo.imgObject as! Data)!)
 
         return cell
@@ -165,14 +168,6 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         deletePhoto(indexPath)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        for ip in indexPaths {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "albumViewCell",
-                                                      for: ip) as! AlbumCollectionViewCell
-            cell.setImage(#imageLiteral(resourceName: "Placeholder"))
-        }
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
@@ -215,7 +210,6 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     @IBAction func refreshPhotos(_ sender: UIBarButtonItem) {
         enableUI(false)
-        
         
         // delete all model photos
         albumCollectionView.performBatchUpdates({
