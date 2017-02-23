@@ -19,6 +19,8 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     @IBOutlet weak var albumCollectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var newCollectionButton: UIBarButtonItem!
+
+    private var blockOperations: [BlockOperation] = []
     
     var pin: Pin?
     
@@ -30,6 +32,13 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             executeSearch()
             albumCollectionView?.reloadData()
         }
+    }
+    
+    // MARK: Deinit
+    
+    deinit {
+        blockOperations.forEach { $0.cancel() }
+        blockOperations.removeAll(keepingCapacity: false)
     }
     
     // Mark: - Life Cycle
@@ -170,44 +179,79 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         deletePhoto(indexPath)
     }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChange sectionInfo: NSFetchedResultsSectionInfo,
-                    atSectionIndex sectionIndex: Int,
-                    for type: NSFetchedResultsChangeType) {
-        
-        let set = IndexSet(integer: sectionIndex)
-        
-        switch (type) {
-        case .insert:
-            albumCollectionView?.insertSections(set)
-        case .delete:
-            albumCollectionView?.deleteSections(set)
-        default:
-            break
-        }
+    // MARK: NSFetchedResultsControllerDelegate
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        blockOperations.removeAll(keepingCapacity: false)
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
                     didChange anObject: Any, at indexPath: IndexPath?,
                     for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        
-        switch(type) {
+        switch type {
+            
         case .insert:
-            albumCollectionView?.insertItems(at: [newIndexPath!])
-        case .delete:
-            albumCollectionView?.deleteItems(at: [indexPath!])
+            guard let newIndexPath = newIndexPath else { return }
+            
+            let op = BlockOperation { [weak self] in
+                self?.albumCollectionView.insertItems(at: [newIndexPath]) }
+            blockOperations.append(op)
+            
         case .update:
-            albumCollectionView?.reloadItems(at: [indexPath!])
+            guard let newIndexPath = newIndexPath else { return }
+            let op = BlockOperation { [weak self] in
+                self?.albumCollectionView.reloadItems(at: [newIndexPath]) }
+            blockOperations.append(op)
+            
         case .move:
-            albumCollectionView?.deleteItems(at: [indexPath!])
-            albumCollectionView?.insertItems(at: [newIndexPath!])
+            guard let indexPath = indexPath else { return }
+            guard let newIndexPath = newIndexPath else { return }
+            let op = BlockOperation { [weak self] in
+                self?.albumCollectionView.moveItem(at: indexPath, to: newIndexPath) }
+            blockOperations.append(op)
+            
+        case .delete:
+            guard let indexPath = indexPath else { return }
+            let op = BlockOperation { [weak self] in
+                self?.albumCollectionView.deleteItems(at: [indexPath]) }
+            blockOperations.append(op)
+        }
+    }
+    
+    func controller(controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChangeSection sectionInfo: NSFetchedResultsSectionInfo,
+                    atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        switch type {
+            
+        case .insert:
+            let op = BlockOperation { [weak self] in
+                self?.albumCollectionView.insertSections(NSIndexSet(index: sectionIndex) as IndexSet) }
+            blockOperations.append(op)
+            
+        case .update:
+            let op = BlockOperation { [weak self] in
+                self?.albumCollectionView.reloadSections(NSIndexSet(index: sectionIndex) as IndexSet) }
+            blockOperations.append(op)
+            
+        case .delete:
+            let op = BlockOperation { [weak self] in
+                self?.albumCollectionView.deleteSections(NSIndexSet(index: sectionIndex) as IndexSet) }
+            blockOperations.append(op)
+            
+        default:
+            break
+            
         }
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        albumCollectionView?.reloadData()
+        albumCollectionView.performBatchUpdates({
+            self.blockOperations.forEach { $0.start() }
+        }, completion: { finished in
+            self.blockOperations.removeAll(keepingCapacity: false)
+        })
     }
-    
+
     @IBAction func refreshPhotos(_ sender: UIBarButtonItem) {
         enableUI(false)
         
