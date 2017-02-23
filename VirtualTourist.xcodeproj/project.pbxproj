@@ -21,7 +21,6 @@
 		B8D4BD5A1E57E0B300E86225 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D4BD561E57E0B300E86225 /* Pin+CoreDataProperties.swift */; };
 		B8D4BD5B1E57E0B300E86225 /* Photo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D4BD571E57E0B300E86225 /* Photo+CoreDataClass.swift */; };
 		B8D4BD5C1E57E0B300E86225 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D4BD581E57E0B300E86225 /* Photo+CoreDataProperties.swift */; };
-		B8DA69F91E5E35DA00D37207 /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8DA69F81E5E35DA00D37207 /* UIImageViewExtension.swift */; };
 		B8ED5E481E57A75500D1456B /* AsyncHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ED5E431E57A75500D1456B /* AsyncHelpers.swift */; };
 		B8ED5E4B1E57A75500D1456B /* ViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ED5E461E57A75500D1456B /* ViewControllerExtension.swift */; };
 		B8ED5E4C1E57A75500D1456B /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ED5E471E57A75500D1456B /* Reachability.swift */; };
@@ -75,7 +74,6 @@
 		B8D4BD561E57E0B300E86225 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		B8D4BD571E57E0B300E86225 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		B8D4BD581E57E0B300E86225 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		B8DA69F81E5E35DA00D37207 /* UIImageViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
 		B8ED5E431E57A75500D1456B /* AsyncHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncHelpers.swift; sourceTree = "<group>"; };
 		B8ED5E461E57A75500D1456B /* ViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerExtension.swift; sourceTree = "<group>"; };
 		B8ED5E471E57A75500D1456B /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
@@ -172,7 +170,6 @@
 				B87D88231E529CCF00EA5A8A /* AppDelegate.swift */,
 				B8ED5E431E57A75500D1456B /* AsyncHelpers.swift */,
 				B8ED5E461E57A75500D1456B /* ViewControllerExtension.swift */,
-				B8DA69F81E5E35DA00D37207 /* UIImageViewExtension.swift */,
 				B8ED5E471E57A75500D1456B /* Reachability.swift */,
 				B87D882A1E529CCF00EA5A8A /* Assets.xcassets */,
 				B87D882C1E529CCF00EA5A8A /* LaunchScreen.storyboard */,
@@ -398,7 +395,6 @@
 				B87DC7011E58C3DF00D8F7AE /* Convenience.swift in Sources */,
 				B8F739031E53CF5400412367 /* CoreDataStack.swift in Sources */,
 				B87DC6FF1E58BFD800D8F7AE /* Client.swift in Sources */,
-				B8DA69F91E5E35DA00D37207 /* UIImageViewExtension.swift in Sources */,
 				B87D88241E529CCF00EA5A8A /* AppDelegate.swift in Sources */,
 				B8ED5E4C1E57A75500D1456B /* Reachability.swift in Sources */,
 				B87AFFE01E54CE4B00631081 /* AlbumCollectionViewCell.swift in Sources */,

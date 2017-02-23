@@ -161,7 +161,7 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "albumViewCell",
                                                       for: indexPath) as! AlbumCollectionViewCell
         
-        cell.setImage(deserializePhoto(photo.imgObject as! Data)!)
+        cell.setImage(photo.imgObject as! Data)
 
         return cell
     }
@@ -236,9 +236,5 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             return nil
         }
         return seralized
-    }
-    
-    private func deserializePhoto(_ data: Data) -> UIImage? {
-        return UIImage(data: data)
     }
 }

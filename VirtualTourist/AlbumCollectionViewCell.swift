@@ -16,7 +16,15 @@ class AlbumCollectionViewCell: UICollectionViewCell {
     
     // Mark: - Methods
     
-    func setImage(_ image: UIImage) {
-        imageView.image = image
+    func setPlaceholder() {
+        self.imageView.image = #imageLiteral(resourceName: "Placeholder")
+    }
+    
+    func setImage(_ image: Data) {
+        imageView.image = deserializePhoto(image)
+    }
+    
+    private func deserializePhoto(_ data: Data) -> UIImage? {
+        return UIImage(data: data)
     }
 }
