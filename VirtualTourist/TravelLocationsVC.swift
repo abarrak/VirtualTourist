@@ -186,7 +186,7 @@ class TravelLocationsVC: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let t = annotation.title!!
         let c = annotation.coordinate
         let any = allPins?.contains(where: { $0.latitude == c.latitude && $0.longitude == c.longitude })
-        if any! {
+        if any != nil && any! {
             return
         }
         

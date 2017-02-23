@@ -13,3 +13,12 @@ func performAsync(_ updates: @escaping () -> Void) {
         updates()
     }
 }
+
+typealias completionHandler =  (_ data: Data?, _  response: URLResponse?, _ error: Error?) -> Void
+
+func getImageAsync(url: URL, completion: @escaping completionHandler) {
+    URLSession.shared.dataTask(with: url) {
+        (data, response, error) in
+        completion(data, response, error)
+    }.resume()
+}

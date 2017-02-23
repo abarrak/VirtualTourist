@@ -51,6 +51,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B82794281E5F3F00002C5BCE /* Model 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 6.xcdatamodel"; sourceTree = "<group>"; };
 		B87AFFDF1E54CE4B00631081 /* AlbumCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		B87D88201E529CCF00EA5A8A /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B87D88231E529CCF00EA5A8A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -674,13 +675,14 @@
 		B8F738F71E53C94F00412367 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				B82794281E5F3F00002C5BCE /* Model 6.xcdatamodel */,
 				B8A67D631E59EB53007DEB3F /* Model 5.xcdatamodel */,
 				B8A67D621E59B6AE007DEB3F /* Model 4.xcdatamodel */,
 				B87DC7021E59184800D8F7AE /* Model 3.xcdatamodel */,
 				B8F8E5B71E57F106008DA21A /* Model 2.xcdatamodel */,
 				B8F738F81E53C94F00412367 /* Model.xcdatamodel */,
 			);
-			currentVersion = B8A67D631E59EB53007DEB3F /* Model 5.xcdatamodel */;
+			currentVersion = B82794281E5F3F00002C5BCE /* Model 6.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

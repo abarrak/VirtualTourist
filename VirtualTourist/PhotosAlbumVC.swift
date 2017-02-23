@@ -114,10 +114,9 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     
                     let title = i["title"]
                     let url   = i["image_url"]!
-                    let photoData = try? Data(contentsOf: URL(string: url)!)
                     
                     performAsync {
-                        self.createPhoto(title: title!, image: photoData! as NSData)
+                        self.createPhoto(title: title!, imageUrl: url)
                     }
                 }
                 performAsync {
@@ -129,8 +128,8 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     // Add a photo to the store with association
-    private func createPhoto(title: String, image: NSData) {
-        let photo = Photo(title: title, image: image, context: context)
+    private func createPhoto(title: String, imageUrl: String) {
+        let photo = Photo(title: title, imageUrl: imageUrl, context: context)
         photo.pin = pin
         pin?.addToPhotos(photo)
     }
@@ -166,13 +165,17 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let photo = fetchedResultsController?.object(at: indexPath) as! Photo
+        let photo = fetchedResultsController?.object(at: indexPath) as? Photo
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "albumViewCell",
                                                       for: indexPath) as! AlbumCollectionViewCell
         
-        cell.setImage(photo.imgObject as! Data)
-
+        if photo?.imgObject != nil {
+            cell.setImage(photo?.imgObject as! Data)
+        } else {
+            cell.setPlaceholder()
+        }
+        
         return cell
     }
     
