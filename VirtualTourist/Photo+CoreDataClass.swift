@@ -32,6 +32,7 @@ public class Photo: NSManagedObject {
             
             DispatchQueue.main.async() { () -> Void in
                 self.imgObject = data as NSData
+                (UIApplication.shared.delegate as! AppDelegate).stack.save()
             }
         }
     }
