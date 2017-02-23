@@ -121,7 +121,10 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     }
                 }
             }
-            performAsync { self.enableUI(true) }
+            performAsync {
+                super.saveInStore()
+                self.enableUI(true)
+            }
         }
     }
     
@@ -130,8 +133,6 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         let photo = Photo(title: title, image: image, context: context)
         photo.pin = pin
         pin?.addToPhotos(photo)
-        
-        super.saveInStore()
     }
     
     // Remove a photo from the store
@@ -255,16 +256,17 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     @IBAction func refreshPhotos(_ sender: UIBarButtonItem) {
         enableUI(false)
         
-        // delete all model photos
+        // Delete all model photos ..
         albumCollectionView.performBatchUpdates({
             let photos = self.pin?.photos
             for p in photos! {
                 self.context.delete(p as! Photo)
             }
-            super.saveInStore()
         }, completion: nil)
+
+        super.saveInStore()
         
-        // get new collection
+        // get new collection ..
         fetchNewPhotos()
     }
     
