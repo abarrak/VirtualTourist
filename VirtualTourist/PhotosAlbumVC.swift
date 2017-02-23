@@ -120,10 +120,10 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                         self.createPhoto(title: title!, image: photoData! as NSData)
                     }
                 }
-            }
-            performAsync {
-                super.saveInStore()
-                self.enableUI(true)
+                performAsync {
+                    super.saveInStore()
+                    self.enableUI(true)
+                }
             }
         }
     }
