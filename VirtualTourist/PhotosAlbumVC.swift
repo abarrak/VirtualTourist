@@ -24,8 +24,6 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     var pin: Pin?
     
-    let imageEncodingQ = DispatchQueue(label: "ImageEncoding", attributes: .concurrent)
-    
     var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>? {
         didSet {
             fetchedResultsController?.delegate = self
@@ -277,13 +275,5 @@ class PhotosAlbumVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     private func enableUI(_ enabled: Bool) {
         newCollectionButton.isEnabled = enabled
-    }
-    
-    private func serializePhoto(_ photo: UIImage) -> Data? {
-        guard let seralized = UIImageJPEGRepresentation(photo, 1) else {
-            alertMessage("Error", message: "Photo is not saved !")
-            return nil
-        }
-        return seralized
-    }
+    }    
 }
